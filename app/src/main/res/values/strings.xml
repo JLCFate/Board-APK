@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">gate-apk</string>
+    <string name="front_button_text">Otwórz przednią</string>
+    <string name="back_button_text">Otwórz tylnią</string>
+</resources>
