@@ -1,29 +1,12 @@
 package jlc.gate_apk;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
+import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.io.IOException;
-import java.net.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkMAC() {
-        String macAddress = getMac();
+        String macAddress = GetMAC.getMac();
         try {
             Call<Object> call = RetroClient.getInstance().getMyApi().isUserAuthorized(macAddress.toLowerCase());
             call.enqueue(new Callback<Object>() {
@@ -54,30 +37,5 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.d("Error", e.getMessage());
         }
-    }
-
-    public String getMac() {
-        try{
-            List<NetworkInterface> networkInterfaceList = Collections.list(NetworkInterface.getNetworkInterfaces());
-            StringBuilder stringMac = new StringBuilder();
-            for(NetworkInterface networkInterface : networkInterfaceList)
-            {
-                if(networkInterface.getName().equalsIgnoreCase("wlan0"))
-                {
-                    for(int i = 0 ;i <networkInterface.getHardwareAddress().length; i++){
-                        String stringMacByte = Integer.toHexString(networkInterface.getHardwareAddress()[i]& 0xFF);
-                        if(stringMacByte.length() == 1) stringMacByte = "0" + stringMacByte;
-                        stringMac.append(stringMacByte.toUpperCase()).append(":");
-                    }
-                    break;
-                }
-            }
-            stringMac.deleteCharAt(stringMac.length()-1);
-            return stringMac.toString();
-        }catch (SocketException e)
-        {
-            e.printStackTrace();
-        }
-        return  "0";
     }
 }
